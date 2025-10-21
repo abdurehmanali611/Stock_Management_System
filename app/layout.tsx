@@ -1,34 +1,10 @@
-import type React from "react"
-import type { Metadata } from "next"
-import { Inter } from "next/font/google"
-import "./globals.css"
-import { SidebarProvider } from "@/components/ui/sidebar"
-import { AppSidebar } from "@/components/app-sidebar"
-import { SidebarInset } from "@/components/ui/sidebar"
-import { Toaster } from "@/components/ui/toaster"
+import { ReactNode } from "react";
+import './globals.css'
 
-const inter = Inter({ subsets: ["latin"] })
-
-export const metadata: Metadata = {
-  title: "Burhan Haider",
-  description: "Professional metal importing business management system",
-    generator: 'v0.dev'
-}
-
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
-  return (
-    <html lang="en">
-      <body className={inter.className}>
-        <SidebarProvider>
-          <AppSidebar />
-          <SidebarInset>{children}</SidebarInset>
-        </SidebarProvider>
-        <Toaster />
-      </body>
-    </html>
-  )
+export default function RootLayout({children}: {children: ReactNode}) {
+ return <html lang="en" suppressHydrationWarning>
+    <body>
+        {children}
+    </body>
+ </html>
 }

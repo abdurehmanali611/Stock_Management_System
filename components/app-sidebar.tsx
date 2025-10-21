@@ -34,7 +34,7 @@ import Link from "next/link"
 const menuItems = [
   {
     title: "Dashboard",
-    url: "/",
+    url: "/Dashboard",
     icon: Home,
   },
   {
@@ -96,7 +96,7 @@ export function AppSidebar() {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <Link href="/">
+              <Link href="/Dashboard">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                   <Navigation className="size-4" />
                 </div>
