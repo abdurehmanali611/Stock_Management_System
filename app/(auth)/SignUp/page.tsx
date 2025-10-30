@@ -36,9 +36,9 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { set } from "date-fns";
 
 const formSchema = z.object({
-  business_name: z.string().toLowerCase(),
-  business_type: z.string().toLowerCase(),
-  admin_name: z.string().toLowerCase(),
+  business_name: z.string().min(2, "Please enter your business name").toLowerCase(),
+  business_type: z.string().min(1, "Please Select your business Type").toLowerCase(),
+  admin_name: z.string().min(2, "Please Enter Your name").toLowerCase(),
   email: z.string().email("Please Enter Valid Email"),
   password: z.string().min(6, "Password must be greater than 6"),
   AdministratorConfirmPassword: z
@@ -47,7 +47,7 @@ const formSchema = z.object({
   phone: z
     .string()
     .min(10, "Please Enter Valid phone Number"),
-  currency: z.string().toLowerCase(),
+  currency: z.string().min(2, "Please Select Your Currency type").toLowerCase(),
 });
 
 export default function SignUp() {
@@ -159,7 +159,7 @@ export default function SignUp() {
                   name="admin_name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Full Name</FormLabel>
+                      <FormLabel className="text-foreground">Full Name</FormLabel>
                       <FormControl>
                         <Input {...field} placeholder="Enter Your name" />
                       </FormControl>
@@ -172,7 +172,7 @@ export default function SignUp() {
                   name="business_name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Business Name</FormLabel>
+                      <FormLabel className="text-foreground">Business Name</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
@@ -188,7 +188,7 @@ export default function SignUp() {
                   name="business_type"
                   render={({ field }) => (
                     <FormItem className="flex flex-col gap-2">
-                      <FormLabel>Business Type</FormLabel>
+                      <FormLabel className="text-foreground">Business Type</FormLabel>
                       <FormControl className="self-center">
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
@@ -196,7 +196,7 @@ export default function SignUp() {
                               variant="outline"
                               className="flex justify-between"
                             >
-                              <p>Business Name</p>
+                              <p>{field.value || "Business Type"}</p>
                               <Image
                                 src="/dropdown.webp"
                                 alt="DropDown"
@@ -236,7 +236,7 @@ export default function SignUp() {
                   name="currency"
                   render={({ field }) => (
                     <FormItem className="flex flex-col gap-2">
-                      <FormLabel>Currency</FormLabel>
+                      <FormLabel className="text-foreground">Currency</FormLabel>
                       <FormControl className="self-center">
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>
@@ -244,7 +244,7 @@ export default function SignUp() {
                               variant="outline"
                               className="flex justify-between"
                             >
-                              <p>Currency</p>
+                              <p>{field.value || "Currency Type"}</p>
                               <Image
                                 src="/dropdown.webp"
                                 alt="DropDown"
@@ -279,7 +279,7 @@ export default function SignUp() {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email</FormLabel>
+                      <FormLabel className="text-foreground">Email</FormLabel>
                       <FormControl>
                         <Input {...field} placeholder="Enter Your email" />
                       </FormControl>
@@ -292,7 +292,7 @@ export default function SignUp() {
                   name="phone"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Phone Number</FormLabel>
+                      <FormLabel className="text-foreground">Phone Number</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
@@ -308,7 +308,7 @@ export default function SignUp() {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Password</FormLabel>
+                      <FormLabel className="text-foreground">Password</FormLabel>
                       <FormControl>
                         <Input {...field} placeholder="Enter Your password" />
                       </FormControl>
@@ -321,7 +321,7 @@ export default function SignUp() {
                   name="AdministratorConfirmPassword"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Confirm Password</FormLabel>
+                      <FormLabel className="text-foreground">Confirm Password</FormLabel>
                       <FormControl>
                         <Input {...field} placeholder="Confirm your password" />
                       </FormControl>
