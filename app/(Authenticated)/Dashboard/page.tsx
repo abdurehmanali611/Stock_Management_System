@@ -1,5 +1,9 @@
 "use client"
 
+import { useEffect, useState, type ReactNode } from 'react'; // New imports
+import { useRouter } from 'next/navigation'; // New imports
+import axios from 'axios'; // New import for API calls
+
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { SidebarTrigger } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
@@ -11,10 +15,55 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
-import { Users, Building2, Package, Ship, DollarSign, AlertTriangle, CheckCircle } from "lucide-react"
+import { Users, Building2, Package, Ship, DollarSign, AlertTriangle, CheckCircle, Loader2 } from "lucide-react" // Added Loader2
 import { Progress } from "@/components/ui/progress"
 
-export default function Dashboard() {
+interface ProtectedPageWrapperProps {
+  children: ReactNode;
+}
+
+const ProtectedPageWrapper = ({ children }:ProtectedPageWrapperProps) => {
+  const router = useRouter();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        await axios.get('http://localhost:8000/api/user-status', {
+          withCredentials: true
+        }); 
+        setIsAuthenticated(true);
+        setIsLoading(false)
+      } catch (error) {
+        console.log("Authentication check failed. Redirecting to login.");
+        setIsAuthenticated(false);
+        router.replace('/Login'); 
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, [router]);
+
+  if (isLoading) {
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-blue-600" />
+        <p className="ml-3 text-lg text-gray-600">Checking authentication...</p>
+      </div>
+    );
+  }
+
+  if (isAuthenticated) {
+    return <>{children}</>;
+  }
+  
+  return null; 
+};
+
+function DashboardContent() {
   const stats = [
     {
       title: "Total Customers",
@@ -44,9 +93,10 @@ export default function Dashboard() {
       icon: DollarSign,
       color: "text-emerald-600",
     },
-  ]
+  ];
 
   const recentActivities = [
+    // ... (Your original recentActivities array content)
     {
       id: 1,
       type: "Vessel Arrival",
@@ -75,7 +125,7 @@ export default function Dashboard() {
       time: "1 day ago",
       status: "info",
     },
-  ]
+  ];
 
   return (
     <div className="flex flex-1 flex-col gap-4 p-4 pt-0">
@@ -186,4 +236,12 @@ export default function Dashboard() {
       </div>
     </div>
   )
+}
+
+export default function Dashboard() {
+    return (
+        <ProtectedPageWrapper>
+            <DashboardContent />
+        </ProtectedPageWrapper>
+    );
 }

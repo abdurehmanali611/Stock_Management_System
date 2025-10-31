@@ -14,6 +14,7 @@ import {
   Warehouse,
   Navigation,
   FileText,
+  LogOutIcon,
 } from "lucide-react"
 
 import {
@@ -30,6 +31,9 @@ import {
   SidebarRail,
 } from "@/components/ui/sidebar"
 import Link from "next/link"
+import { Button } from "./ui/button"
+import axios from "axios"
+import { useRouter } from "next/navigation"
 
 const menuItems = [
   {
@@ -89,7 +93,47 @@ const menuItems = [
   },
 ]
 
+function getCookie(name: string) {
+  if (typeof document === 'undefined') return null;
+  
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop()?.split(';').shift();
+  return null;
+}
+
+const api = axios.create({
+  baseURL: "http://localhost:8000/api",
+  headers: {
+    "Accept": "application/json",
+    "X-Requested-With": "XMLHttpRequest"
+  },
+  withCredentials: true
+})
+
+api.interceptors.request.use(
+  (config) => {
+    const token = getCookie('XSRF-TOKEN');
+    if (token && ['post', 'put', 'patch', 'delete'].includes(config.method?.toLowerCase() || '')) {
+      config.headers['X-XSRF-TOKEN'] = decodeURIComponent(token);
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+async function getCsrfCookie() {
+  await axios.get("http://localhost:8000/sanctum/csrf-cookie", {
+    withCredentials: true
+  });
+}
+
 export function AppSidebar() {
+
+  const router = useRouter()
+
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader>
@@ -136,6 +180,17 @@ export function AppSidebar() {
                 <Settings />
                 <span>Settings</span>
               </Link>
+            </SidebarMenuButton>
+            <SidebarMenuButton asChild>
+              <Button onClick={async() => {
+                await getCsrfCookie()
+                await api.post("/logout"),
+                localStorage.removeItem("user")
+                router.push("/Login")
+              }}>
+                <LogOutIcon />
+                <span>Logout</span>
+              </Button>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

@@ -9,3 +9,4 @@ Route::post('login', [BusinessMenController::class,'login']);
 Route::middleware('auth:sanctum')->group(function() {
     Route::post('addBusiness', [BusinessController::class,'store']);
 });
+Route::middleware('auth:sanctum')->post('logout', [BusinessMenController::class, 'logout']);

@@ -5,12 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\Business;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Laravel\Sanctum\HasApiTokens;
 
 class BusinessMan extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\BusinessMenFactory> */
-    use HasFactory, HasApiTokens;
+    use HasFactory;
 
     protected $fillable = [
         'name',

@@ -26,13 +26,13 @@ class BusinessMenController extends Controller
 
         $BusinessMan = Auth::user();
 
-        $Token = $BusinessMan->createToken('auth_token')->plainTextToken;
+        // $Token = $BusinessMan->createToken('auth_token')->plainTextToken;
 
         return response()->json([
             'status' => 'success',
             'message' => 'Business Man Logged in successfully',
             'data' => $BusinessMan,
-            'Token' => $Token
+            // 'Token' => $Token
         ], 200);
     }
 
@@ -49,14 +49,30 @@ class BusinessMenController extends Controller
 
         $BusinessMan = BusinessMan::create($data);
 
-        $Token = $BusinessMan->createToken('auth_token')->plainTextToken;
+        Auth::login($BusinessMan);
+
+        // $Token = $BusinessMan->createToken('auth_token')->plainTextToken;
 
         return response()->json([
             'status' => 'success',
             'message' => 'Business Man registered successfully',
             'data' => $BusinessMan,
-            'Token' => $Token
+            // 'Token' => $Token
         ], 201);
+    }
+
+    public function logout(Request $request) {
+        Auth::guard('web')->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return response()->json([
+            'message'=>'Logged Out Successfully'
+        ]);
+    }
+
+    public function index(Request $request) {
+        return view('home');
     }
 
 }
